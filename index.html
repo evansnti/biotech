@@ -1,7 +1,3 @@
-
-
-</style>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +19,7 @@ body {
     line-height: 1.6;
     background: #f5f8f4;
     color: #26332a;
+    overflow-x: hidden;
 }
 
 /* HEADER */
@@ -47,15 +44,31 @@ header {
     color: #9be15d;
 }
 
+nav {
+    display: flex;
+    align-items: center;
+}
+
 nav a {
     color: white;
     text-decoration: none;
     margin-left: 20px;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 nav a:hover {
     color: #9be15d;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
 }
 
 /* HERO */
@@ -71,20 +84,21 @@ nav a:hover {
     justify-content: center;
     text-align: center;
     color: white;
-    padding: 30px;
+    padding: 30px 20px;
 }
 
 .hero-content {
     max-width: 850px;
+    width: 100%;
 }
 
 .hero h1 {
-    font-size: 55px;
+    font-size: clamp(28px, 6vw, 55px);
     margin-bottom: 20px;
 }
 
 .hero p {
-    font-size: 20px;
+    font-size: clamp(15px, 2.5vw, 20px);
     margin-bottom: 30px;
 }
 
@@ -114,7 +128,7 @@ section {
 }
 
 .section-title h2 {
-    font-size: 35px;
+    font-size: clamp(24px, 4vw, 35px);
     color: #125c2b;
 }
 
@@ -251,6 +265,7 @@ form textarea {
     margin: 8px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 16px; /* prevents iOS zoom on focus */
 }
 
 form textarea {
@@ -264,6 +279,7 @@ form button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 100%;
 }
 
 /* FOOTER */
@@ -279,32 +295,105 @@ footer a {
     text-decoration: none;
 }
 
-/* RESPONSIVE */
-@media(max-width: 850px) {
+/* ===== RESPONSIVE ===== */
 
-    header {
-        flex-direction: column;
-    }
+/* TABLET */
+@media (max-width: 900px) {
 
-    nav {
-        margin-top: 10px;
-    }
-
-    nav a {
-        margin: 5px;
-        font-size: 14px;
-    }
-
-    .hero h1 {
-        font-size: 38px;
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .about-content {
         grid-template-columns: 1fr;
     }
 
+    .about img {
+        order: -1;
+    }
+
+    section {
+        padding: 55px 6%;
+    }
+}
+
+/* MOBILE NAV + LAYOUT */
+@media (max-width: 768px) {
+
+    header {
+        padding: 15px 5%;
+        flex-wrap: wrap;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 15px;
+        align-items: flex-start;
+    }
+
+    nav.open {
+        display: flex;
+    }
+
+    nav a {
+        margin: 0;
+        padding: 10px 0;
+        width: 100%;
+        border-top: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .hero {
+        min-height: 70vh;
+        padding: 25px 20px;
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        max-width: 280px;
+        margin: 8px auto;
+    }
+
     .cards {
         grid-template-columns: 1fr;
+    }
+
+    .ghana-box {
+        padding: 25px;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    section {
+        padding: 45px 5%;
+    }
+}
+
+/* SMALL PHONES */
+@media (max-width: 420px) {
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .ghana-box {
+        padding: 18px;
+    }
+
+    .faq-item {
+        padding: 15px;
     }
 }
 </style>
@@ -319,7 +408,9 @@ footer a {
 🌱 Agri<span>BioTech</span>
 </div>
 
-<nav>
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+
+<nav id="navMenu">
 <a href="#home">Home</a>
 <a href="#about">About</a>
 <a href="#applications">Applications</a>
@@ -756,7 +847,7 @@ biotechnology education.
 
 <div class="card">
 <h3>🌾 Rice Biotechnology</h3>
-<p> 
+<p>
 Research can focus on improving rice productivity, disease
 resistance, stress tolerance and grain quality.
 </p>
@@ -959,8 +1050,22 @@ function searchWebsite() {
 
 }
 
+
+/* MOBILE MENU TOGGLE */
+const menuToggle = document.getElementById("menuToggle");
+const navMenu = document.getElementById("navMenu");
+
+menuToggle.addEventListener("click", function() {
+    navMenu.classList.toggle("open");
+});
+
+navMenu.querySelectorAll("a").forEach(function(link) {
+    link.addEventListener("click", function() {
+        navMenu.classList.remove("open");
+    });
+});
+
 </script>
 
 </body>
 </html>
-
